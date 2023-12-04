@@ -22,3 +22,20 @@
     padding-top: 10px;
     padding-left: 5px;
 }
+
+.header-buttons{
+    background-color: transparent;
+    width: 200px;
+    font-size: large;
+    border: 0;
+}
+
+.header-buttons:hover{
+    color: red;
+}
+
+.header-buttons-container{
+    display: flex;
+    justify-content: center; /*This only works when display is set to flex*/
+    padding-top: 45px;
+}
