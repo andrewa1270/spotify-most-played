@@ -31,7 +31,9 @@
 }
 
 .header-buttons:hover{
-    color: red;
+    transform: scale(1.2); /*Enlarges text on hover*/
+    color: rgb(88, 88, 88);
+    transition: 0.5s;
 }
 
 .header-buttons-container{
