@@ -24,16 +24,17 @@
 }
 
 .header-buttons{
+    margin-left: 20px;
     background-color: transparent;
     width: 200px;
     font-size: large;
     border: 0;
+    color: black;
 }
 
-.header-buttons:hover{
-    transform: scale(1.2); /*Enlarges text on hover*/
+.header-buttons:hover {
+    transform: scale(1.2);
     color: rgb(88, 88, 88);
-    transition: 0.5s;
 }
 
 .header-buttons-container{

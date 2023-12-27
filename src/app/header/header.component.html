@@ -2,10 +2,18 @@
     <img src="../../assets/spotify.png" alt="Spotify Logo" class="logo">
     <img src="../../assets/icons/account.png" alt="user" class="user-icon">
     <h1 class="title">Spotify Stats</h1>
-    <div class="header-buttons-container">
-    <button class="header-buttons" (click)="pieClick()">Pie</button>
-    <button class="header-buttons" (click)="lastMonthClick()">Last Month</button>
-    <button class="header-buttons" (click)="sixMonthClick()">Last 6 Months</button>
-    <button class="header-buttons" (click)="lastYearClick()">Last Year</button>
+        <div class="header-buttons-container">
+            <nav>
+                <a style="text-decoration: none;" class="header-buttons" routerLink="/pie">Pie</a>
+                <a style="text-decoration: none;" class="header-buttons" routerLink="/last-month">Last Month</a>
+                <a style="text-decoration: none;" class="header-buttons" routerLink="/last-six-months">Last 6 Months</a>
+                <a style="text-decoration: none;" class="header-buttons" routerLink="/last-year">Last Year</a>
+            </nav>
+        <!-- <button class="header-buttons" (click)="pieClick()">Pie</button>
+        <button class="header-buttons" (click)="lastMonthClick()">Last Month</button>
+        <button class="header-buttons" (click)="sixMonthClick()">Last 6 Months</button>
+        <button class="header-buttons" (click)="lastYearClick()">Last Year</button> -->
+        </div>
 </div>
-</div>
+<router-outlet></router-outlet> 
+<!-- Routing links will be displayed after previous HTML -->
