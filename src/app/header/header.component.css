@@ -33,7 +33,7 @@
 }
 
 .header-buttons:hover {
-    transform: scale(1.2);
+    transform: scale(1.2); /* This feature not working after change from buttons to a tags in header-componenet*/
     color: rgb(88, 88, 88);
 }
 
