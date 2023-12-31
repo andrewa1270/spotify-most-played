@@ -9,7 +9,7 @@ import json
 
 app = Flask(__name__) #Creates Flask application
 
-app.secret_key = "replace-with-cryptographic-hash" 
+app.secret_key = "replace-with-cryptographic-hash" #TODO
 app.config['SESSION_COOKIE_NAME'] = 'Andrews Cookie' #Session prevents user from re-logging in each time they leave the page
 TOKEN_INFO = "token_info"
 
@@ -52,34 +52,14 @@ def getTopSongs(): #TODO: Add timeframe parameter for interaction with front end
 
     return top_tracks
 
-#TODO Create timeframe selection function to change time_range parameter based on user input
-
-
-@app.route('/time')
-def getTimeRange():
-    spotify_oauth = create_spotify_oauth()
-    url_code = request.args.get('code') 
-    token_info = spotify_oauth.get_access_token(url_code)
-    access_token = token_info['access_token']
-
-    headers = {'Authorization': f'Bearer {access_token}'}
-    print(headers)
-
-    response = requests.get('https://api.spotify.com/v1/me/player/recently-played', headers=headers)
-    response = response.json()
-
-    all_times = []
-    count = 0
-    # for time in all_times:
-    while count <= 19:
-        print(response['items'][count]['played_at'])
-        all_times.append(response['items'][count]['played_at']) 
-        count += 1
-
-    # return response['items']['played_at']
-    return str(len(all_times))
-
-    # response.json()['items'][0]
+def timeframeSelection(timeframe):
+    #TODO Timeframe = String of button selected on ui E.G. 'last month' - use document.getElementById
+    if timeframe == 'Last Month':
+         return 'short_term'
+    elif timeframe == 'Last 6 Months':
+         return 'medium_term'
+    else:
+         return 'long_term'
 
 
 def get_token():
