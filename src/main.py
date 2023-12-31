@@ -4,6 +4,8 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
 import time
+import requests
+import json
 
 app = Flask(__name__) #Creates Flask application
 
@@ -32,22 +34,56 @@ def redirectPage():
     return redirect(url_for('getTopSongs', _external=True))
 
 @app.route('/top-songs')
-def getTopSongs():
+def getTopSongs(): #TODO: Add timeframe parameter for interaction with front end
     try:
         token_info = get_token()
-        print(token_info)
     except ValueError as e:
         print("User not logged in")
         return redirect(url_for('login', _external=True)) # Redirect to login page if no token_infoo for that session is found
 
     sp = spotipy.Spotify(auth=token_info['access_token'])
-    sp.current_user_top_tracks
-    #TODO: Create function to specify timerange
-    return sp.current_user_top_tracks(limit=50, offset=0, time_range='short_term')['items'][0]['name']
+    
+    top_tracks = []
+    count = 0
+    while count < 5:
+        top_tracks.append(sp.current_user_top_tracks(limit=50, offset=0, time_range='short_term')['items'][count]['name'])
+        print(sp.current_user_top_tracks(limit=50, offset=0, time_range='short_term')['items'][count]['name'])
+        count += 1
+
+    return top_tracks
+
+#TODO Create timeframe selection function to change time_range parameter based on user input
+
+
+@app.route('/time')
+def getTimeRange():
+    spotify_oauth = create_spotify_oauth()
+    url_code = request.args.get('code') 
+    token_info = spotify_oauth.get_access_token(url_code)
+    access_token = token_info['access_token']
+
+    headers = {'Authorization': f'Bearer {access_token}'}
+    print(headers)
+
+    response = requests.get('https://api.spotify.com/v1/me/player/recently-played', headers=headers)
+    response = response.json()
+
+    all_times = []
+    count = 0
+    # for time in all_times:
+    while count <= 19:
+        print(response['items'][count]['played_at'])
+        all_times.append(response['items'][count]['played_at']) 
+        count += 1
+
+    # return response['items']['played_at']
+    return str(len(all_times))
+
+    # response.json()['items'][0]
+
 
 def get_token():
     token_info = session.get(TOKEN_INFO, None)
-    
     if token_info is None or 'access_token' not in token_info:
         raise ValueError("Token is None or missing 'access_token'")
 
@@ -69,7 +105,7 @@ def create_spotify_oauth():
         client_id=os.getenv("CLIENT_ID"),
         client_secret=os.getenv("CLIENT_SECRET"),
         redirect_uri=url_for('redirectPage', _external=True), #url_for changes beginning part of URL as needed e.g. from localHost to www.bbc.co.uk #external=true means it creates the absolute path
-        scope="user-top-read"
+        scope="user-top-read user-read-recently-played"
     )
 
 app.run() # Creates development server and runs flask app
