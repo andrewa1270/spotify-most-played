@@ -4,8 +4,9 @@
     <h1 class="title">Spotify Stats</h1>
         <div class="header-buttons-container">
             <nav>
+                <a href="http://127.0.0.1:5000/">Login</a>
                 <a style="text-decoration: none;" class="header-buttons" routerLink="/pie">Pie</a>
-                <a style="text-decoration: none;" class="header-buttons" routerLink="/last-month">Last Month</a>
+                <a style="text-decoration: none;" class="header-buttons" routerLink="/last-month" (click)="lastMonthClick()">Last Month</a>
                 <a style="text-decoration: none;" class="header-buttons" routerLink="/last-six-months">Last 6 Months</a>
                 <a style="text-decoration: none;" class="header-buttons" routerLink="/last-year">Last Year</a>
             </nav>
