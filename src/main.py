@@ -1,13 +1,16 @@
 #Note: Flask and requests library serve different purposes
-from flask import Flask, request ,url_for, session, redirect
+from flask import Flask, request ,url_for, session, redirect, jsonify
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import os
 import time
 import requests
 import json
+from flask_cors import CORS
 
 app = Flask(__name__) #Creates Flask application
+# CORS(app, resources={r"/top-songs/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:4200"}})
 
 app.secret_key = "replace-with-cryptographic-hash" #TODO
 app.config['SESSION_COOKIE_NAME'] = 'Andrews Cookie' #Session prevents user from re-logging in each time they leave the page
@@ -31,10 +34,12 @@ def redirectPage():
     url_code = request.args.get('code') #Retrieves value associated with query parameter 'code' e.g. http://127.0.0.1:5000/redirect-page?code=12345 will return '12345'
     token_info = spotify_oauth.get_access_token(url_code)
     session[TOKEN_INFO] = token_info # Saves the token_info to that session
-    return redirect(url_for('getTopSongs', _external=True))
+    
+    # This should redirect you back to angular web page not getTopSongs
+    return redirect(url_for('getTopSongs', timeRange='short_term' ,_external=True))
 
-@app.route('/top-songs')
-def getTopSongs(): #TODO: Add timeframe parameter for interaction with front end
+@app.route('/top-songs/<timeRange>') # <timeRange acts as placeholder in the url route>
+def getTopSongs(timeRange): 
     try:
         token_info = get_token()
     except ValueError as e:
@@ -46,12 +51,13 @@ def getTopSongs(): #TODO: Add timeframe parameter for interaction with front end
     top_tracks = []
     count = 0
     while count < 5:
-        top_tracks.append(sp.current_user_top_tracks(limit=50, offset=0, time_range='short_term')['items'][count]['name'])
-        print(sp.current_user_top_tracks(limit=50, offset=0, time_range='short_term')['items'][count]['name'])
+        top_tracks.append(sp.current_user_top_tracks(limit=50, offset=0, time_range=timeRange)['items'][count]['name'])
+        print(sp.current_user_top_tracks(limit=50, offset=0, time_range=timeRange)['items'][count]['name'])
         count += 1
 
-    return top_tracks
+    return jsonify(top_tracks)
 
+#TODO This can probably be deleted TBD
 def timeframeSelection(timeframe):
     #TODO Timeframe = String of button selected on ui E.G. 'last month' - use document.getElementById
     if timeframe == 'Last Month':

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { RetrieveTopSongsService } from '../services/retrieve-top-songs.service'
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -6,13 +8,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  constructor(private retrieveTopSongsService: RetrieveTopSongsService){
+
+  }
   public pieClick(){
     const routePath = "pie-chart"
     console.log("pie click")
   }
-  public lastMonthClick(){
-    const routePath = "last-month"
+  public lastMonthClick(): Observable<any>{
     console.log("last month click")
+    return this.retrieveTopSongsService.getTopSongs('short_term')
   }
   public sixMonthClick(){
     const routePath = "last-six-months"
