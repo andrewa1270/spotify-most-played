@@ -10,9 +10,9 @@ from flask_cors import CORS
 
 app = Flask(__name__) #Creates Flask application
 # CORS(app, resources={r"/top-songs/*": {"origins": "*"}})
-CORS(app, resources={r"/*": {"origins": "http://localhost:4200"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:4200", "supports_credentials": True}}) #TODO change origin url before prod release
 
-app.secret_key = "replace-with-cryptographic-hash" #TODO
+app.secret_key = "02bfbxi422hswq23nf3" #TODO
 app.config['SESSION_COOKIE_NAME'] = 'Andrews Cookie' #Session prevents user from re-logging in each time they leave the page
 TOKEN_INFO = "token_info"
 
@@ -23,6 +23,7 @@ TOKEN_INFO = "token_info"
 
 @app.route('/') #app.route = path that needs to be taken to execute code below
 def login():
+    # session.clear()
     spotify_oauth = create_spotify_oauth()
     auth_url = spotify_oauth.get_authorize_url() #Gets the URL to use to authorize this app
     return redirect(auth_url) #redirect = in-built flask function
@@ -30,18 +31,28 @@ def login():
 @app.route('/redirect-page')
 def redirectPage():
     spotify_oauth = create_spotify_oauth()
-    session.clear()
     url_code = request.args.get('code') #Retrieves value associated with query parameter 'code' e.g. http://127.0.0.1:5000/redirect-page?code=12345 will return '12345'
     token_info = spotify_oauth.get_access_token(url_code)
     session[TOKEN_INFO] = token_info # Saves the token_info to that session
-    
-    # This should redirect you back to angular web page not getTopSongs
-    return redirect(url_for('getTopSongs', timeRange='short_term' ,_external=True))
+    print(session[TOKEN_INFO]) 
+
+    # TODO This should redirect you back to angular web page not getTopSongs
+    # return redirect(url_for('getTopSongs', timeRange='short_term' ,_external=True))
+    return redirect('http://localhost:4200/')
+
+@app.route('/profile')
+def checkTokenContents():
+    token_info = session[TOKEN_INFO]
+    spotify_oauth = create_spotify_oauth()
+    user_info = spotify_oauth.get_access_token(f"me", token_info)
+    return jsonify(user_info)
 
 @app.route('/top-songs/<timeRange>') # <timeRange acts as placeholder in the url route>
 def getTopSongs(timeRange): 
+    print(session[TOKEN_INFO])
     try:
         token_info = get_token()
+        print('token exists')
     except ValueError as e:
         print("User not logged in")
         return redirect(url_for('login', _external=True)) # Redirect to login page if no token_infoo for that session is found
@@ -52,21 +63,9 @@ def getTopSongs(timeRange):
     count = 0
     while count < 5:
         top_tracks.append(sp.current_user_top_tracks(limit=50, offset=0, time_range=timeRange)['items'][count]['name'])
-        print(sp.current_user_top_tracks(limit=50, offset=0, time_range=timeRange)['items'][count]['name'])
         count += 1
 
     return jsonify(top_tracks)
-
-#TODO This can probably be deleted TBD
-def timeframeSelection(timeframe):
-    #TODO Timeframe = String of button selected on ui E.G. 'last month' - use document.getElementById
-    if timeframe == 'Last Month':
-         return 'short_term'
-    elif timeframe == 'Last 6 Months':
-         return 'medium_term'
-    else:
-         return 'long_term'
-
 
 def get_token():
     token_info = session.get(TOKEN_INFO, None)
