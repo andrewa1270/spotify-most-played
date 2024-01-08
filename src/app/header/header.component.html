@@ -5,15 +5,11 @@
         <div class="header-buttons-container">
             <nav>
                 <a (click)="loginClick()">Login</a>
-                <a style="text-decoration: none;" class="header-buttons" routerLink="/pie">Pie</a>
+                <a style="text-decoration: none;" class="header-buttons" (click)="pieClick()">Pie</a>
                 <a style="text-decoration: none;" class="header-buttons" routerLink="/last-month" (click)="lastMonthClick()">Last Month</a>
                 <a style="text-decoration: none;" class="header-buttons" routerLink="/last-six-months">Last 6 Months</a>
                 <a style="text-decoration: none;" class="header-buttons" routerLink="/last-year">Last Year</a>
             </nav>
-        <!-- <button class="header-buttons" (click)="pieClick()">Pie</button>
-        <button class="header-buttons" (click)="lastMonthClick()">Last Month</button>
-        <button class="header-buttons" (click)="sixMonthClick()">Last 6 Months</button>
-        <button class="header-buttons" (click)="lastYearClick()">Last Year</button> -->
         </div>
 </div>
 <router-outlet></router-outlet> 

@@ -16,10 +16,6 @@ app.secret_key = "02bfbxi422hswq23nf3" #TODO
 app.config['SESSION_COOKIE_NAME'] = 'Andrews Cookie' #Session prevents user from re-logging in each time they leave the page
 TOKEN_INFO = "token_info"
 
-    # Example Route #
-# @app.route('/test') --> Decorator 
-# def testFunc(): --> Endpoint
-#     return 'test Page Works'
 
 @app.route('/') #app.route = path that needs to be taken to execute code below
 def login():
@@ -49,7 +45,7 @@ def checkTokenContents():
 
 @app.route('/top-songs/<timeRange>') # <timeRange acts as placeholder in the url route>
 def getTopSongs(timeRange): 
-    print(session[TOKEN_INFO])
+    # print(session[TOKEN_INFO])
     try:
         token_info = get_token()
         print('token exists')
@@ -90,6 +86,7 @@ def create_spotify_oauth():
         client_id=os.getenv("CLIENT_ID"),
         client_secret=os.getenv("CLIENT_SECRET"),
         redirect_uri=url_for('redirectPage', _external=True), #url_for changes beginning part of URL as needed e.g. from localHost to www.bbc.co.uk #external=true means it creates the absolute path
+        # redirect_uri=('http://localhost:4200/', _external=True),
         scope="user-top-read user-read-recently-played"
     )
 
