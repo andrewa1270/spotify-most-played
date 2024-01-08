@@ -9,17 +9,14 @@ export class RetrieveTopSongsService {
 
   constructor(private http: HttpClient) { }
 
-    getTopSongs(timeRange: String): Observable<any>{
-      const topSongs = this.http.get(`http://127.0.0.1:5000/top-songs/${timeRange}`, {withCredentials: true });
-      // const topSongs = this.http.get('http://127.0.0.1:5000/test'); # This works
-      topSongs.subscribe(songs => console.log(songs))
-      return topSongs
-  }
+  //   getTopSongs(timeRange: String): Observable<any>{
+  //     const topSongs = this.http.get(`http://127.0.0.1:5000/top-songs/${timeRange}`, {withCredentials: true });
+  //     return topSongs
+  // }
 
-  getSessionToken(): Observable<any>{
-    const token_info = this.http.get('http://127.0.0.1:5000/profile');
-    token_info.subscribe(token => console.log(token))
-    return token_info
-
-  }
+  // getSessionToken(): Observable<any>{
+  //   const token_info = this.http.get('http://127.0.0.1:5000/profile');
+  //   token_info.subscribe(token => console.log(token))
+  //   return token_info
+  // }
 }
