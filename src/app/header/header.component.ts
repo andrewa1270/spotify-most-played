@@ -25,18 +25,15 @@ export class HeaderComponent {
     this.apiService.getAccessToken()
   }
   public lastMonthClick(): string{
-    console.log("last month click")
     return this.apiService.getCode();
     // return this.retrieveTopSongsService.getTopSongs('short_term')
     // console.log(this.retrieveTopSongsService.getSessionToken().subscribe(token => console.log(token)))
     // return this.retrieveTopSongsService.getTopSongs('short_term')
   }
   public sixMonthClick(){
-    const routePath = "last-six-months"
-    console.log("last 6 months")
+    this.apiService.getAccessToken()
   }
   public lastYearClick(){
-    const routePath = "last-year"
-    console.log("last year")
+    this.apiService.accessToken()
   }
 }

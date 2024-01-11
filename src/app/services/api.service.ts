@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { CLIENT_ID, CLIENT_SECRET } from 'src/details';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private token_info?: string
   private code!: any;
-  // private encoded: string = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
   private encoded: string = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
+  private tokenRequested: boolean = false
+  private token_info$?: Observable<string>;
+
 
   private body = new HttpParams()
   .set('grant_type', 'authorization_code')
@@ -31,9 +32,9 @@ export class ApiService {
       this.requestAccessToken();
     });
   }
-  
-  private requestAccessToken() {
-    if (this.code) {
+
+  private requestAccessToken(): Observable<string | undefined> {
+    if (this.code && !this.tokenRequested) {
       const body = new HttpParams()
         .set('grant_type', 'authorization_code')
         .set('code', this.code)
@@ -41,25 +42,27 @@ export class ApiService {
   
       this.http.post("https://accounts.spotify.com/api/token", body.toString(), { headers: this.headers }).subscribe(
         response => {
-          this.token_info = JSON.stringify(response);
-          console.log('Token Info:', this.token_info);
+          return this.token_info$ = of(JSON.stringify(response));
         },
         error => {
-          console.error('Error obtaining access token:', error);
+          return console.error('Error obtaining access token:', error);
         }
-      );
-    }
-
-    console.log(this.token_info)
+        );
+      }
+      
+      return of(undefined)
   }
-  
+
+  public accessToken(){
+    this.token_info$?.subscribe(val => console.log(val))
+
+  }
 
   getCode(): string{ //TODO: Add correct type annotation
     this.route.queryParamMap.subscribe(paramMap => {
       this.code = paramMap.get('code');
-      return this.code
     })
-    return ''
+    return this.code
   }
 
 }
