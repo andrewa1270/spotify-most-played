@@ -11,29 +11,47 @@ import { ApiService } from '../services/api.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  constructor(private retrieveTopSongsService: RetrieveTopSongsService, private route: ActivatedRoute, private apiService:ApiService){
+  private isTokenRetrieved: boolean = false; // Checks if access token acquired yet
 
-  }
+  constructor(private retrieveTopSongsService: RetrieveTopSongsService, private route: ActivatedRoute, private apiService:ApiService){}
+
   public loginClick() {
     // Trigger Spotify OAuth flow
-    window.location.href = (`https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`)
+    window.location.href = (`https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`);
   }
 
-  public pieClick(){
-    const routePath = "pie-chart"
-    console.log("pie click")
-    this.apiService.getAccessToken()
-  }
-  public lastMonthClick(): string{
-    return this.apiService.getCode();
-    // return this.retrieveTopSongsService.getTopSongs('short_term')
-    // console.log(this.retrieveTopSongsService.getSessionToken().subscribe(token => console.log(token)))
-    // return this.retrieveTopSongsService.getTopSongs('short_term')
-  }
-  public sixMonthClick(){
-    this.apiService.getAccessToken()
-  }
-  public lastYearClick(){
+  public async pieClick(){
+    if (!this.isTokenRetrieved){      
+      await this.apiService.getAccessToken()
+      this.isTokenRetrieved = true
+    }
     this.apiService.accessToken()
+  }
+  public async lastMonthClick(){
+    if (!this.isTokenRetrieved){      
+      await this.apiService.getAccessToken()
+      this.isTokenRetrieved = true
+
+    }
+    console.log('no functionality')
+  }
+  public async sixMonthClick(){
+    if (!this.isTokenRetrieved){      
+      await this.apiService.getAccessToken()
+      this.isTokenRetrieved = true
+
+    }
+    console.log('no functionality')
+
+  }
+  
+  public async lastYearClick(){
+    if (!this.isTokenRetrieved){      
+      await this.apiService.getAccessToken()
+      this.isTokenRetrieved = true
+
+    }
+    console.log('no functionality')
+
   }
 }
