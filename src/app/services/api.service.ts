@@ -12,7 +12,7 @@ import { Token } from 'src/types';
 export class ApiService {
   private code?: any;
   private encoded: string = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
-  private token_info$?: string;
+  private token_info$?: Token;
 
   constructor(private route:ActivatedRoute) { }
 
@@ -27,25 +27,54 @@ export class ApiService {
   
 
   private requestAccessToken(): Observable<any> {
-    const body = new HttpParams()
-      .set('grant_type', 'authorization_code')
-      .set('code', this.code)
-      .set('redirect_uri', 'http://localhost:4200/');
+    
 
-    return from(fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Basic ' + this.encoded,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: body.toString()
-    })).pipe(
-      switchMap(response => response.json()),
-      switchMap((token: Token) => {
-        this.token_info$ = JSON.stringify(token);
-        return of(token);
-      })
-    );
+      if (this.token_info$){
+        if (((new Date().getTime()) / 1000 - (this.token_info$.start_time.getTime()) / 1000) < 0){
+          // timer ran out
+          const body = new HttpParams()
+          .set('grant_type', 'refresh_token')
+          .set('refresh_token', this.token_info$.refresh_token)
+          .set('client_id', CLIENT_ID);
+
+          return from(fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: body.toString()
+          })).pipe(
+            switchMap(response => response.json()),
+            switchMap((token: Token) => {
+              this.token_info$ = {...token, start_time: new Date()}
+              return of(token);
+            })
+          )
+        } else {
+          return of(this.token_info$)
+        }
+      } 
+      else {
+        const body = new HttpParams()
+        .set('grant_type', 'authorization_code')
+        .set('code', this.code)
+        .set('redirect_uri', 'http://localhost:4200/');
+
+        return from(fetch('https://accounts.spotify.com/api/token', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Basic ' + this.encoded,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: body.toString()
+        })).pipe(
+          switchMap(response => response.json()),
+          switchMap((token: Token) => {
+            this.token_info$ = {...token, start_time: new Date()}
+            return of(token);
+          })
+        );
+      }
   }
 
   public returnAccessToken(): string {
@@ -53,8 +82,7 @@ export class ApiService {
       TODO - Check if access_token has expired here. use time to check
      */
     if (this.token_info$ != null) {
-      const jsonToken : Token = JSON.parse(this.token_info$);
-      const access_token = jsonToken["access_token"].toString();
+      const access_token = this.token_info$["access_token"].toString();
       return access_token;
     }
     return 'NONE FOUND'; // no access token
