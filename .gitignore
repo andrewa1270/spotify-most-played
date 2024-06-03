@@ -4,6 +4,7 @@
 .cache
 respose_formats.txt
 details.ts
+spotify-variables.ts
 # Compiled output
 /dist
 /tmp

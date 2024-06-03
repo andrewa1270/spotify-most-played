@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { RetrieveTopSongsService } from '../services/retrieve-top-songs.service'
 import { Observable } from 'rxjs';
-import { CLIENT_ID, REDIRECT_URI, SCOPE } from 'src/details';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../services/api.service';
+import { CLIENT_ID, REDIRECT_URI, SCOPE } from 'src/spotify-variables';
 
 @Component({
   selector: 'app-header',
@@ -20,12 +20,14 @@ export class HeaderComponent {
     window.location.href = (`https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`);
   }
 
-  public async pieClick(){
-    if (!this.isTokenRetrieved){      
-      await this.apiService.getAccessToken()
-      this.isTokenRetrieved = true
-    }
-    this.apiService.accessToken()
+  public pieClick(){
+    // if (!this.isTokenRetrieved){      
+    //   this.apiService.getAccessToken()
+    //   this.isTokenRetrieved = true
+    // }
+    this.apiService.getTopTracks('short_term')
+
+    // this.apiService.getAccessToken()
   }
   public async lastMonthClick(){
     if (!this.isTokenRetrieved){      
