@@ -9,6 +9,16 @@ export class RetrieveTopSongsService {
 
   constructor(private http: HttpClient) { }
 
+  private _topSongs: any
+
+  public get topSongs(){
+    return this._topSongs
+  }
+
+  public set topSongs(value: any){
+    this._topSongs = value
+  }
+
   //   getTopSongs(timeRange: String): Observable<any>{
   //     const topSongs = this.http.get(`http://127.0.0.1:5000/top-songs/${timeRange}`, {withCredentials: true });
   //     return topSongs

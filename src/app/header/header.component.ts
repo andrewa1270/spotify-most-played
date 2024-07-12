@@ -25,35 +25,19 @@ export class HeaderComponent {
     //   this.apiService.getAccessToken()
     //   this.isTokenRetrieved = true
     // }
-    this.apiService.getTopTracks('short_term')
-
+    console.log('no functionality')
+    
     // this.apiService.getAccessToken()
   }
-  public async lastMonthClick(){
-    if (!this.isTokenRetrieved){      
-      await this.apiService.getAccessToken()
-      this.isTokenRetrieved = true
-
-    }
-    console.log('no functionality')
+  public lastMonthClick(){
+    const x = this.apiService.getTopTracks('short_term')
+    console.log(x)
   }
-  public async sixMonthClick(){
-    if (!this.isTokenRetrieved){      
-      await this.apiService.getAccessToken()
-      this.isTokenRetrieved = true
-
-    }
-    console.log('no functionality')
-
+  public sixMonthClick(){
+    this.apiService.getTopTracks('medium_term')
   }
   
-  public async lastYearClick(){
-    if (!this.isTokenRetrieved){      
-      await this.apiService.getAccessToken()
-      this.isTokenRetrieved = true
-
-    }
-    console.log('no functionality')
-
+  public lastYearClick(){
+    this.apiService.getTopTracks('long_term')
   }
 }
