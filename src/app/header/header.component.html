@@ -1,16 +1,23 @@
-<div class="headerBar">
-    <img src="../../assets/spotify.png" alt="Spotify Logo" class="logo">
-    <img src="../../assets/icons/account.png" alt="user" class="user-icon">
-    <h1 class="title">Spotify Stats</h1>
-        <div class="header-buttons-container">
-            <nav>
-                <a (click)="loginClick()">Login</a>
-                <a style="text-decoration: none;" class="header-buttons" (click)="pieClick()">Pie</a>
-                <a style="text-decoration: none;" class="header-buttons" (click)="lastMonthClick()">Last Month</a>
-                <a style="text-decoration: none;" class="header-buttons" (click)="sixMonthClick()">Last 6 Months</a>
-                <a style="text-decoration: none;" class="header-buttons" (click)="lastYearClick()">Last Year</a>
-            </nav>
+<nav class="bg-gray-800">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center justify-between">
+        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+          <div class="flex flex-shrink-0 items-center">
+            <img class="h-8 w-auto" src="../../assets/spotify.png" alt="Your Company">
+          </div>
+          <div class="hidden sm:ml-6 sm:block">
+            <div class="flex space-x-4">
+              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+              <a [routerLink]="['/pie']" queryParamsHandling="merge"[ngClass]="setTabClass('pie')" aria-current="page" (click)="activeTab = 'pie' ">Pie</a>
+              <a [routerLink]="['/last-month']" queryParamsHandling="merge" [ngClass]="setTabClass('lastMonth')" (click)="activeTab = 'lastMonth'" >Last Month</a>
+              <a [routerLink]="['/last-six-months']" queryParamsHandling="merge" [ngClass]="setTabClass('lastSixMonths')" (click)="activeTab = 'lastSixMonths'">Last 6 Months</a>
+              <a [routerLink]="['/last-year']" queryParamsHandling="merge" [ngClass]="setTabClass('lastYear')" (click)="activeTab = 'lastYear'">Last Year</a>
+              <a class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" (click)="loginClick()" >Login</a>
+            </div>
+          </div>
         </div>
-</div>
-<router-outlet></router-outlet> 
-<!-- Routing links will be displayed after previous HTML -->
+    
+      </div>
+    </div>
+  </nav>
+  <router-outlet></router-outlet> 

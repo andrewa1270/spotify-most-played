@@ -3,7 +3,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, from, of, switchMap } from 'rxjs';
 import { CLIENT_ID, CLIENT_SECRET } from 'src/spotify-variables';
-import { Token, TopTracksEndpoint } from 'src/types';
+import { Item, Items, Token, TopTracksEndpoint } from 'src/types';
 
 @Injectable({
   providedIn: 'root'
@@ -88,8 +88,8 @@ export class ApiService {
     return 'NONE FOUND'; // no access token
   }
 
-  public getTopTracks(time_range: string): any[] {
-    const topTracks: any[] = []
+  public getTopTracks(time_range: string): Item[] {
+    const topTracks: Item[] = []
     this.getAccessToken().subscribe(() => {
       const access_token = this.returnAccessToken();
       const url = `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=20`; // TODO: Add to variable
@@ -100,7 +100,7 @@ export class ApiService {
           "Authorization": `Bearer ${access_token}`,
         },
       }).then(response => response.json())
-        .then((data: TopTracksEndpoint) => data.items.map(track => topTracks.push(track.name)))
+        .then((data: Items) => data.items.map(track => topTracks.push(track)))
         .catch(error => console.error('Error fetching top tracks:', error));
     });
 
