@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, from, of, switchMap } from 'rxjs';
+import { Observable, from, lastValueFrom, of, switchMap } from 'rxjs';
 import { CLIENT_ID, CLIENT_SECRET } from 'src/spotify-variables';
-import { Item, Items, Token, TopTracksEndpoint } from 'src/types';
+import { TrackMetadata, TrackInfo, Token, TopTracksEndpoint } from 'src/types';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,8 @@ export class ApiService {
   private code?: any;
   private encoded: string = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
   private token_info$?: Token;
+
+  public topArtists: TrackMetadata[] = []
 
   constructor(private route:ActivatedRoute) { }
 
@@ -27,8 +29,6 @@ export class ApiService {
   
 
   private requestAccessToken(): Observable<any> {
-    
-
       if (this.token_info$){
         if (((new Date().getTime()) / 1000 - (this.token_info$.start_time.getTime()) / 1000) < 0){
           // timer ran out
@@ -78,9 +78,6 @@ export class ApiService {
   }
 
   public returnAccessToken(): string {
-    /* 
-      TODO - Check if access_token has expired here. use time to check
-     */
     if (this.token_info$ != null) {
       const access_token = this.token_info$["access_token"].toString();
       return access_token;
@@ -88,8 +85,8 @@ export class ApiService {
     return 'NONE FOUND'; // no access token
   }
 
-  public getTopTracks(time_range: string): Item[] {
-    const topTracks: Item[] = []
+  public getTopTracks(time_range: string): TrackMetadata[] {
+    const topTracks: TrackMetadata[] = []
     this.getAccessToken().subscribe(() => {
       const access_token = this.returnAccessToken();
       const url = `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=20`; // TODO: Add to variable
@@ -100,11 +97,28 @@ export class ApiService {
           "Authorization": `Bearer ${access_token}`,
         },
       }).then(response => response.json())
-        .then((data: Items) => data.items.map(track => topTracks.push(track)))
+        .then((data: TrackInfo) => data.items.map(track => topTracks.push(track)))
         .catch(error => console.error('Error fetching top tracks:', error));
     });
 
     return topTracks
+  }
+  
+  public getTopArtists(time_range: string): void {
+    this.getAccessToken().subscribe(() => {
+      const access_token = this.returnAccessToken();
+      const url = `https://api.spotify.com/v1/me/top/artists?time_range=${time_range}&limit=20`; // TODO: Add to variable
+
+      return fetch(url, {
+        method: 'GET',
+        headers: {
+          "Authorization": `Bearer ${access_token}`,
+        },
+      }).then(response => response.json())
+        .then((data: TrackInfo) => data.items.map(artist => this.topArtists.push(artist)))
+        .catch(error => console.error('Error fetching top artists:', error));
+    });
+    
   }
 
   public accessToken() {

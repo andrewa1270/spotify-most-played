@@ -7,7 +7,10 @@ import { PieComponent } from './pie/pie.component';
 import { LastMonthComponent } from './last-month/last-month.component';
 import { LastSixMonthComponent } from './last-six-month/last-six-month.component';
 import { LastYearComponent } from './last-year/last-year.component';
-import { HttpClientModule } from '@angular/common/http' 
+import { HttpClientModule } from '@angular/common/http';
+import { HomepageComponent } from './homepage/homepage.component' 
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+
 
 @NgModule({
   declarations: [
@@ -16,12 +19,14 @@ import { HttpClientModule } from '@angular/common/http'
     PieComponent,
     LastMonthComponent,
     LastSixMonthComponent,
-    LastYearComponent
+    LastYearComponent,
+    HomepageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    CanvasJSAngularChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -23,10 +23,10 @@ export type TrackMetaData = {
    */
 } 
 
-export type HeaderOptions = 'pie'| 'lastMonth' | 'lastSixMonths' | 'lastYear'
+export type HeaderOptions = 'pie'| 'lastMonth' | 'lastSixMonths' | 'lastYear' | 'home'
 
-export interface Items {
-  items:    Item[];
+export interface TrackInfo {
+  items:    TrackMetadata[];
   total:    number;
   limit:    number;
   offset:   number;
@@ -35,9 +35,9 @@ export interface Items {
   previous: null;
 }
 
-export interface Item {
+export interface TrackMetadata {
   album:             Album;
-  artists:           Artist[];
+  artists:           ArtistInfo[];
   available_markets: string[];
   disc_number:       number;
   duration_ms:       number;
@@ -57,7 +57,7 @@ export interface Item {
 
 export interface Album {
   album_type:             AlbumType;
-  artists:                Artist[];
+  artists:                ArtistInfo[];
   available_markets:      string[];
   external_urls:          ExternalUrls;
   href:                   string;
@@ -77,7 +77,7 @@ export enum AlbumType {
   Single = "SINGLE",
 }
 
-export interface Artist {
+export interface ArtistInfo {
   external_urls: ExternalUrls;
   href:          string;
   id:            string;
@@ -114,4 +114,55 @@ export interface ExternalIDS {
 
 export enum ItemType {
   Track = "track",
+}
+
+export type DataPoint = {
+  y: number;
+  name: string;
+}
+export interface ArtistInfo {
+  items:    ArtistMetadata[];
+  total:    number;
+  limit:    number;
+  offset:   number;
+  href:     string;
+  next:     string;
+  previous: null;
+}
+
+export interface ArtistMetadata {
+  external_urls: ExternalUrls;
+  followers:     Followers;
+  genres:        string[];
+  href:          string;
+  id:            string;
+  images:        Image[];
+  name:          string;
+  popularity:    number;
+  type:          Type;
+  uri:           string;
+}
+
+export interface ExternalUrls {
+  spotify: string;
+}
+
+export interface Followers {
+  href:  null;
+  total: number;
+}
+
+export interface Image {
+  height: number;
+  url:    string;
+  width:  number;
+}
+
+export enum Type {
+  Artist = "artist",
+}
+
+export type GenreWeighting = {
+  name: string;
+  count: number;
 }

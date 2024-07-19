@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../services/api.service';
-import { Item } from 'src/types';
+import { TrackMetadata } from 'src/types';
 
 @Component({
   selector: 'app-last-month',
@@ -12,7 +12,7 @@ export class LastMonthComponent {
     this.getTopTracks()
   }
 
-  public topTracks: Item[] = []
+  public topTracks: TrackMetadata[] = []
 
   public getTopTracks(): void {
     this.topTracks = this.apiService.getTopTracks('short_term')
