@@ -9,7 +9,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 
 const routes: Routes = [
   { path: 'home', component: HomepageComponent },
-  { path: 'pie', component: PieComponent},
+  // { path: 'pie', component: PieComponent},
   { path: 'last-month', component: LastMonthComponent},
   { path: 'last-six-months', component: LastSixMonthComponent},
   { path: 'last-year', component: LastYearComponent},

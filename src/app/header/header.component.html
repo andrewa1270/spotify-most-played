@@ -8,7 +8,7 @@
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <a [routerLink]="['/pie']" queryParamsHandling="merge"[ngClass]="setTabClass('pie')" aria-current="page" (click)="activeTab = 'pie' ">Pie</a>
+              <!-- <a [routerLink]="['/pie']" queryParamsHandling="merge"[ngClass]="setTabClass('pie')" aria-current="page" (click)="activeTab = 'pie' ">Pie</a> -->
               <a [routerLink]="['/last-month']" queryParamsHandling="merge" [ngClass]="setTabClass('lastMonth')" (click)="activeTab = 'lastMonth'" >Last Month</a>
               <a [routerLink]="['/last-six-months']" queryParamsHandling="merge" [ngClass]="setTabClass('lastSixMonths')" (click)="activeTab = 'lastSixMonths'">Last 6 Months</a>
               <a [routerLink]="['/last-year']" queryParamsHandling="merge" [ngClass]="setTabClass('lastYear')" (click)="activeTab = 'lastYear'">Last Year</a>
