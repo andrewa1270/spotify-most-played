@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../services/api.service';
-import { TrackMetadata } from 'src/types';
+import { ArtistInfo, TrackMetadata } from 'src/types';
 
 @Component({
   selector: 'app-last-year',
@@ -17,5 +17,9 @@ export class LastYearComponent {
   public getTopTracks(): void {
     this.topTracks = this.apiService.getTopTracks('long_term')
 
+  }
+
+  public formatArtists(artists: ArtistInfo[]): string{
+    return artists.map(artist_details => artist_details.name).join(', ')
   }
 }
