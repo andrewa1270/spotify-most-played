@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ApiService } from '../services/api.service';
 import { CLIENT_ID, REDIRECT_URI, SCOPE } from 'src/spotify-variables';
 import { HeaderOptions } from 'src/types';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +16,7 @@ export class HeaderComponent {
     this._activeTab = tab;
   }
 
-  constructor( private apiService:ApiService){}
+  constructor(private apiService: ApiService) { }
 
   public loginClick() {
     // Trigger Spotify OAuth flow
