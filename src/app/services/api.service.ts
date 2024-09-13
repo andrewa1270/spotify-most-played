@@ -12,7 +12,6 @@ import { TrackMetadata, TrackInfo, Token, TopTracksEndpoint } from 'src/types';
 export class ApiService {
   private code?: any;
   private encoded: string = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
-  private token_info$?: Token;
 
   public topArtists: TrackMetadata[] = []
 
@@ -27,14 +26,15 @@ export class ApiService {
     );
   }
   
-
   private requestAccessToken(): Observable<any> {
-      if (this.token_info$){
-        if (((new Date().getTime()) / 1000 - (this.token_info$.start_time.getTime()) / 1000) < 0){
+    const tokenInfo = localStorage.getItem('token_info$')
+      if (tokenInfo){
+        const parsedTokenInfo: Token = JSON.parse(tokenInfo)
+        if (((new Date().getTime()) / 1000 - (parsedTokenInfo.start_time.getTime()) / 1000) < 0){
           // timer ran out
           const body = new HttpParams()
           .set('grant_type', 'refresh_token')
-          .set('refresh_token', this.token_info$.refresh_token)
+          .set('refresh_token', parsedTokenInfo.refresh_token)
           .set('client_id', CLIENT_ID);
 
           return from(fetch('https://accounts.spotify.com/api/token', {
@@ -46,12 +46,13 @@ export class ApiService {
           })).pipe(
             switchMap(response => response.json()),
             switchMap((token: Token) => {
-              this.token_info$ = {...token, start_time: new Date()}
+              // Convert the object to a JSON string and save it to localStorage
+              localStorage.setItem('token_info$', JSON.stringify({...token, start_time: new Date()}))
               return of(token);
             })
           )
         } else {
-          return of(this.token_info$)
+          return of(localStorage.getItem('token_info$'))
         }
       } 
       else {
@@ -70,7 +71,8 @@ export class ApiService {
         })).pipe(
           switchMap(response => response.json()),
           switchMap((token: Token) => {
-            this.token_info$ = {...token, start_time: new Date()}
+            // Convert the object to a JSON string and save it to localStorage
+            localStorage.setItem('token_info$', JSON.stringify({...token, start_time: new Date()}))
             return of(token);
           })
         );
@@ -78,9 +80,10 @@ export class ApiService {
   }
 
   public returnAccessToken(): string {
-    if (this.token_info$ != null) {
-      const access_token = this.token_info$["access_token"].toString();
-      return access_token;
+    const tokenInfoInStorage = (localStorage.getItem('token_info$'))
+    if (tokenInfoInStorage != null) {
+      const tokenInfo: Token = JSON.parse(tokenInfoInStorage)
+      return tokenInfo.access_token
     }
     return 'NONE FOUND'; // no access token
   }
@@ -130,5 +133,7 @@ export class ApiService {
     });
     return this.code;
   }
+
+
 
 }
